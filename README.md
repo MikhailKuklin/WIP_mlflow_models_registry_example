@@ -1,2 +1,1 @@
-# WIP_mlflow_models_registry_example
-WIP
+# WIP
