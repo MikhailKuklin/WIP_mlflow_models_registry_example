@@ -23,6 +23,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
+mlflow.set_experiment("penguins_log_reg_pipe")
+
 
 def pull_data(path_to_dataset: Path):
     # load data
@@ -76,7 +79,81 @@ def get_train_val_datasets(df: DataFrame):
     return X_train, X_val, y_train, y_val
 
 
+def train_log_reg(X_train, y_train, regularization):
+    np.random.seed(0)
+    scaler = StandardScaler()
+    log_reg = LogisticRegression(
+        C=regularization,
+        dual=False,
+        fit_intercept=True,
+        intercept_scaling=1,
+        l1_ratio=None,
+        max_iter=100,
+        multi_class="ovr",
+        n_jobs=None,
+        penalty="l2",
+        random_state=None,
+        solver="lbfgs",
+        tol=0.0001,
+        verbose=0,
+        warm_start=False,
+    )
+    pipe_def_model = Pipeline([("scaler", scaler), ("log_reg", log_reg)])
+    pipe_def_model.fit(X_train, y_train)
+
+    return pipe_def_model
+
+
+def predict(model, X):
+    y_pred = model.predict(X)
+    return y_pred
+
+
+def predict_prob(model, X):
+    y_pred = model.predict_proba(X)
+    return y_pred
+
+
+def get_metrics_train(y_true, y_pred, y_pred_proba):
+    acc = accuracy_score(y_true, y_pred)
+    prec = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    f1_s = f1_score(y_true, y_pred)
+
+    return {
+        "train-accuracy": acc,
+        "train-precision": prec,
+        "train-recall": recall,
+        "train-f1-score": f1_s,
+    }
+
+
+def get_metrics_val(y_true, y_pred, y_pred_proba):
+    acc = accuracy_score(y_true, y_pred)
+    prec = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    f1_s = f1_score(y_true, y_pred)
+
+    return {
+        "val-accuracy": acc,
+        "val-precision": prec,
+        "val-recall": recall,
+        "val-f1-score": f1_s,
+    }
+
+
+def get_confusion_matrix(clf, X, y, name):
+    plot_confusion_matrix(clf, X, y)
+    plt.savefig(name)
+
+
+def get_roc(clf, X, y, name):
+    metrics.plot_roc_curve(clf, X, y)
+    plt.savefig(name)
+
+
 if __name__ == "__main__":
     df = pull_data("../data/penguins.csv")
     df_enc = preprocess_data(df)
     X_train, X_val, y_train, y_val = get_train_val_datasets(df_enc)
+    train_log_reg(X_train, y_train, 0.0001)
