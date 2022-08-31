@@ -156,7 +156,52 @@ def get_roc(clf, X, y, name):
     plt.savefig(name)
 
 
-# def  tracking_model_save():
+def tracking_model_save(model, X_train, X_val, y_train, y_val):
+    # mlflow.set_tracking_uri('http://127.0.0.1:5000')
+    mlflow.set_experiment("penguins_log_reg_pipeline")
+
+    model = train_log_reg(X_train, y_train, 0.0001)
+
+    # with open("models/model_log_reg_pipeline.bin", "wb") as f_out:
+    #    pickle.dump((model), f_out)
+
+    # training set
+    y_pred_train = predict(model, X_train)
+    y_pred_proba_train = predict_prob(model, X_train)
+    metrics_train = get_metrics_train(y_train, y_pred_train, y_pred_proba_train)
+    confusion_matric_artifact = get_confusion_matrix(
+        model, X_train, y_train, "confusion_matrix_train.png"
+    )
+    roc_artifact = get_roc(model, X_train, y_train, "roc_train.png")
+
+    # validation set
+    y_pred = predict(model, X_val)
+    y_pred_proba = predict_prob(model, X_val)
+    metrics_val = get_metrics_val(y_val, y_pred, y_pred_proba)
+    confusion_matric_artifact = get_confusion_matrix(
+        model, X_val, y_val, "confusion_matrix_val.png"
+    )
+    roc_artifact = get_roc(model, X_val, y_val, "roc_val.png")
+
+    with mlflow.start_run():
+
+        for metric in metrics_train:
+            mlflow.log_metric(metric, metrics_train[metric])
+
+        for metric in metrics_val:
+            mlflow.log_metric(metric, metrics_val[metric])
+
+        mlflow.log_artifact("confusion_matrix_train.png", "confusion_matrix_train")
+        mlflow.log_artifact("confusion_matrix_val.png", "confusion_matrix_val")
+        mlflow.log_artifact("roc_train.png", "roc_train")
+        mlflow.log_artifact("roc_val.png", "roc_val")
+        mlflow.log_param("Regularization", 0.0001)
+
+        mlflow.set_tag("Data", "../data/penguins.csv")
+
+        mlflow.sklearn.log_model(model, "log_reg")
+
+        mlflow.sklearn.log_model(model, artifact_path="models_mlflow")
 
 
 if __name__ == "__main__":
@@ -164,3 +209,4 @@ if __name__ == "__main__":
     df_enc = preprocess_data(df)
     X_train, X_val, y_train, y_val = get_train_val_datasets(df_enc)
     model = train_log_reg(X_train, y_train, 0.0001)
+    tracking_model_save(model, X_train, X_val, y_train, y_val)
