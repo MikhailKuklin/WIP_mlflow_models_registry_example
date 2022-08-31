@@ -1,6 +1,7 @@
 # Example of MLflow models and register functionality
 
-Repo contains notebook (/notebooks) which demonstrate functionality of MLFlow models and register:
+Repo contains notebook (/notebooks) with functionality of MLFlow 
+models and register:
 
 ## Step 1: create conda environment
 
