@@ -70,6 +70,10 @@ def preprocess_data(df: DataFrame):
 
 def get_train_val_datasets(df: DataFrame):
     X = df_enc.iloc[:, :11].values
+    labels = df_enc[["label"]]
+    y = labels.to_numpy().reshape(
+        -1,
+    )
 
     # split dataset into training and validation sets
     X_train, X_val, y_train, y_val = train_test_split(
@@ -152,8 +156,11 @@ def get_roc(clf, X, y, name):
     plt.savefig(name)
 
 
+# def  tracking_model_save():
+
+
 if __name__ == "__main__":
     df = pull_data("../data/penguins.csv")
     df_enc = preprocess_data(df)
     X_train, X_val, y_train, y_val = get_train_val_datasets(df_enc)
-    train_log_reg(X_train, y_train, 0.0001)
+    model = train_log_reg(X_train, y_train, 0.0001)
