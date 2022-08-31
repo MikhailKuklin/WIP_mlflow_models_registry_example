@@ -65,6 +65,18 @@ def preprocess_data(df: DataFrame):
     return df_enc
 
 
+def get_train_val_datasets(df: DataFrame):
+    X = df_enc.iloc[:, :11].values
+
+    # split dataset into training and validation sets
+    X_train, X_val, y_train, y_val = train_test_split(
+        X, y, test_size=0.2, shuffle=True, stratify=y, random_state=42
+    )
+
+    return X_train, X_val, y_train, y_val
+
+
 if __name__ == "__main__":
     df = pull_data("../data/penguins.csv")
     df_enc = preprocess_data(df)
+    X_train, X_val, y_train, y_val = get_train_val_datasets(df_enc)
