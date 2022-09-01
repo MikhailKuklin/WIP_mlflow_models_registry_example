@@ -11,10 +11,10 @@ conda create -n mlflow_reg-env python=3.9
 conda activate mlflow_reg-env
 ```
 
-## Step 2: install requirements.txt
+## Step 2: install requirements
 
 ```sh
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 ## Step 3: launch MLFlow UI
