@@ -1,6 +1,6 @@
-# Example of MLflow models and register functionality using Prefect orchestation tool
+# WIP: Example of MLflow models and register functionality using Prefect orchestation tool
 
-!!!WIP!!!
+
 
 ## Step 1: create conda environment
 
