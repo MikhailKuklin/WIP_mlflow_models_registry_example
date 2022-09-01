@@ -6,3 +6,4 @@ category-encoders>=2.5.0,<3.0.0
 mlflow==1.28.0
 prefect==2.0b5
 pytest==7.1.2
+matplotlib==3.5.1

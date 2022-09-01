@@ -3,6 +3,7 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import category_encoders as ce
 import pickle
 import mlflow
