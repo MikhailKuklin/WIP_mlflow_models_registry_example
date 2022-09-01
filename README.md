@@ -1,7 +1,6 @@
-# Example of MLflow models and register functionality
+# Example of MLflow models and register functionality using Prefect orchestation tool
 
-Repo contains notebook (/notebooks) with functionality of MLFlow 
-models and register:
+!!!WIP!!!
 
 ## Step 1: create conda environment
 
