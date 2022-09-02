@@ -83,18 +83,6 @@ def get_train_val_datasets(df: DataFrame):
     return X_train, X_val, y_train, y_val
 
 
-@task
-def predict(model, X):
-    y_pred = model.predict(X)
-    return y_pred
-
-
-@task
-def predict_prob(model, X):
-    y_pred = model.predict_proba(X)
-    return y_pred
-
-
 def get_confusion_matrix(clf, X, y, name):
     plot_confusion_matrix(clf, X, y)
     plt.savefig(name)
@@ -164,12 +152,11 @@ def train_log_reg(X_train, X_val, y_train, y_val, regularization):
         "val_recall",
         "val_f1_score",
     )
+
     # confusion_matric_artifact = get_confusion_matrix(
     #     model, X_train, y_train, "confusion_matrix_train.png"
     # )
     # roc_artifact = get_roc(model, X_train, y_train, "roc_train.png")
-
-    # validation set
 
     # confusion_matric_artifact = get_confusion_matrix(
     #     model, X_val, y_val, "confusion_matrix_val.png"
