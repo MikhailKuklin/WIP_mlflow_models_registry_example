@@ -1,5 +1,7 @@
 # WIP: Example of MLflow models and register functionality using Prefect orchestation tool
 
+[![Check
+status](https://https://github.com/MikhailKuklin/mlflow_models_registry_with_prefect/actions/workflows/check.yml/badge.svg)](https://https://github.com/MikhailKuklin/mlflow_models_registry_with_prefect/actions/workflows/check.yml)
 
 
 ## Step 1: create conda environment
