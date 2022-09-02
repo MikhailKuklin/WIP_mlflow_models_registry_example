@@ -56,6 +56,8 @@ prefect orion start # start prefect UI and go to http://127.0.0.1:4200
 ```
 ![Prefect desktop](figures/prefect_ui_desktop.png)
 
+![Prefect logs](figures/prefect_ui_logs.png)
 
+![Prefect radar](figures/prefect_ui_radar.png)
 
 
