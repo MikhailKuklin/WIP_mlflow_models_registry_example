@@ -26,6 +26,7 @@ from sklearn.pipeline import Pipeline
 from prefect import flow, task
 
 
+@task
 def pull_data(path_to_dataset: Path):
     # load data
     df = pd.read_csv(path_to_dataset)
@@ -37,6 +38,7 @@ def pull_data(path_to_dataset: Path):
     return df
 
 
+@task
 def preprocess_data(df: DataFrame):
     # one hot encoding - nominal data
     encoder = ce.OneHotEncoder(
