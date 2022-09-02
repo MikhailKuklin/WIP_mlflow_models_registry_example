@@ -54,7 +54,7 @@ mlflow server --backend-store-uri sqlite:///backend.db --default-artifact-root .
 python3 prefect_flow.py
 prefect orion start # start prefect UI and go to http://127.0.0.1:4200
 ```
-
+![Prefect desktop](figures/prefect_ui_desktop.png)
 
 
 
