@@ -133,24 +133,37 @@ def train_log_reg(X_train, X_val, y_train, y_val, regularization):
     y_pred_val = model.predict(X_val)
 
     # metrics
-    train_accuracy = accuracy_score(y_train, y_pred_train)
-    val_accuracy = accuracy_score(y_val, y_pred_val)
-    train_precision = precision_score(y_train, y_pred_train)
-    val_precision = precision_score(y_val, y_pred_val)
-    train_recall = recall_score(y_train, y_pred_train)
-    val_recall = recall_score(y_val, y_pred_val)
-    train_f1_score = f1_score(y_train, y_pred_train)
-    val_f1_score = f1_score(y_val, y_pred_val)
 
-    metrics_train = [
-        train_accuracy,
-        train_precision,
-        train_recall,
-        train_f1_score,
-    ]
+    def get_metrics(y_true, y_pred, acc_name, prec_name, recall_name, f1_name):
+        acc = accuracy_score(y_true, y_pred)
+        prec = precision_score(y_true, y_pred)
+        recall = recall_score(y_true, y_pred)
+        f1_s = f1_score(y_true, y_pred)
 
-    metrics_val = [val_accuracy, val_precision, val_recall, val_f1_score]
+        return {
+            acc_name: acc,
+            prec_name: prec,
+            recall_name: recall,
+            f1_name: f1_s,
+        }
 
+    metrics_train = get_metrics(
+        y_train,
+        y_pred_train,
+        "train_accuracy",
+        "train_precision",
+        "train_recall",
+        "train_f1_score",
+    )
+
+    metrics_val = get_metrics(
+        y_val,
+        y_pred_val,
+        "val_accuracy",
+        "val_precision",
+        "val_recall",
+        "val_f1_score",
+    )
     # confusion_matric_artifact = get_confusion_matrix(
     #     model, X_train, y_train, "confusion_matrix_train.png"
     # )
@@ -165,11 +178,11 @@ def train_log_reg(X_train, X_val, y_train, y_val, regularization):
 
     with mlflow.start_run():
 
-        # for metric in metrics_train:
-        #    mlflow.log_metric(metric, "metric")
+        for metric in metrics_train:
+            mlflow.log_metric(metric, metrics_train[metric])
 
-        # for metric in metrics_val:
-        #    mlflow.log_metric(metric, "metric")
+        for metric in metrics_val:
+            mlflow.log_metric(metric, metrics_val[metric])
 
         # mlflow.log_artifact("confusion_matrix_train.png", "confusion_matrix_train")
         # mlflow.log_artifact("confusion_matrix_val.png", "confusion_matrix_val")
@@ -186,7 +199,7 @@ def train_log_reg(X_train, X_val, y_train, y_val, regularization):
 
 @flow
 def main():
-    # mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
     mlflow.set_experiment("test")
     df = pull_data("../data/penguins.csv")
     df_enc = preprocess_data(df)
