@@ -55,9 +55,6 @@ def preprocess_data(df: DataFrame):
     df_enc.loc[df_enc.sex == "female", "label"] = int(0)
     df_enc["label"].astype("float")
 
-    # check number of males/females to inspect if dataset is imbalanced
-    df_enc["label"].value_counts()
-
     # get labels
     labels = df_enc[["label"]]
     y = labels.to_numpy().reshape(
@@ -110,7 +107,6 @@ def get_roc(clf, X, y, name):
 
 @task
 def train_log_reg(X_train, X_val, y_train, y_val, regularization):
-    np.random.seed(0)
     scaler = StandardScaler()
     log_reg = LogisticRegression(
         C=regularization,
@@ -122,7 +118,7 @@ def train_log_reg(X_train, X_val, y_train, y_val, regularization):
         multi_class="ovr",
         n_jobs=None,
         penalty="l2",
-        random_state=None,
+        random_state=42,
         solver="lbfgs",
         tol=0.0001,
         verbose=0,
@@ -190,8 +186,8 @@ def train_log_reg(X_train, X_val, y_train, y_val, regularization):
 
 @flow
 def main():
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
-    mlflow.set_experiment("penguins_log_reg_pipe")
+    # mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    mlflow.set_experiment("test")
     df = pull_data("../data/penguins.csv")
     df_enc = preprocess_data(df)
     X_train, X_val, y_train, y_val = get_train_val_datasets(df_enc)
