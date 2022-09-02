@@ -17,7 +17,7 @@ conda activate mlflow_reg-env
 pip install -r requirements.txt
 
 ### NOTE that Mac M1 requires (on 02-09-2022) installation of 
-###greenlet from the source code. Read more here: https://github.com/neovim/pynvim/issues/502
+### greenlet from the source code. Read more here: https://github.com/neovim/pynvim/issues/502
 
 
 ```
