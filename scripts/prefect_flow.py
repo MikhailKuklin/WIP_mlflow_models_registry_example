@@ -24,6 +24,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 from prefect import flow, task
+from prefect.task_runners import SequentialTaskRunner
 
 
 @task
@@ -69,6 +70,7 @@ def preprocess_data(df: DataFrame):
     return df_enc
 
 
+@task
 def get_train_val_datasets(df: DataFrame):
     X = df.iloc[:, :11].values
     labels = df[["label"]]
@@ -84,7 +86,30 @@ def get_train_val_datasets(df: DataFrame):
     return X_train, X_val, y_train, y_val
 
 
-def train_log_reg(X_train, y_train, regularization):
+@task
+def predict(model, X):
+    y_pred = model.predict(X)
+    return y_pred
+
+
+@task
+def predict_prob(model, X):
+    y_pred = model.predict_proba(X)
+    return y_pred
+
+
+def get_confusion_matrix(clf, X, y, name):
+    plot_confusion_matrix(clf, X, y)
+    plt.savefig(name)
+
+
+def get_roc(clf, X, y, name):
+    metrics.plot_roc_curve(clf, X, y)
+    plt.savefig(name)
+
+
+@task
+def train_log_reg(X_train, X_val, y_train, y_val, regularization):
     np.random.seed(0)
     scaler = StandardScaler()
     log_reg = LogisticRegression(
@@ -103,83 +128,40 @@ def train_log_reg(X_train, y_train, regularization):
         verbose=0,
         warm_start=False,
     )
+
     pipe_def_model = Pipeline([("scaler", scaler), ("log_reg", log_reg)])
-    pipe_def_model.fit(X_train, y_train)
 
-    return pipe_def_model
+    model = pipe_def_model.fit(X_train, y_train)
 
+    y_pred_train = model.predict(X_train)
+    y_pred_val = model.predict(X_val)
 
-def predict(model, X):
-    y_pred = model.predict(X)
-    return y_pred
+    # metrics
+    train_accuracy = accuracy_score(y_train, y_pred_train)
+    val_accuracy = accuracy_score(y_val, y_pred_val)
+    train_precision = precision_score(y_train, y_pred_train)
+    val_precision = precision_score(y_val, y_pred_val)
+    train_recall = recall_score(y_train, y_pred_train)
+    val_recall = recall_score(y_val, y_pred_val)
+    train_f1_score = f1_score(y_train, y_pred_train)
+    val_f1_score = f1_score(y_val, y_pred_val)
 
+    metrics_train = [
+        train_accuracy,
+        train_precision,
+        train_recall,
+        train_f1_score,
+    ]
 
-def predict_prob(model, X):
-    y_pred = model.predict_proba(X)
-    return y_pred
+    metrics_val = [val_accuracy, val_precision, val_recall, val_f1_score]
 
-
-def get_metrics_train(y_true, y_pred, y_pred_proba):
-    acc = accuracy_score(y_true, y_pred)
-    prec = precision_score(y_true, y_pred)
-    recall = recall_score(y_true, y_pred)
-    f1_s = f1_score(y_true, y_pred)
-
-    return {
-        "train-accuracy": acc,
-        "train-precision": prec,
-        "train-recall": recall,
-        "train-f1-score": f1_s,
-    }
-
-
-def get_metrics_val(y_true, y_pred, y_pred_proba):
-    acc = accuracy_score(y_true, y_pred)
-    prec = precision_score(y_true, y_pred)
-    recall = recall_score(y_true, y_pred)
-    f1_s = f1_score(y_true, y_pred)
-
-    return {
-        "val-accuracy": acc,
-        "val-precision": prec,
-        "val-recall": recall,
-        "val-f1-score": f1_s,
-    }
-
-
-def get_confusion_matrix(clf, X, y, name):
-    plot_confusion_matrix(clf, X, y)
-    plt.savefig(name)
-
-
-def get_roc(clf, X, y, name):
-    metrics.plot_roc_curve(clf, X, y)
-    plt.savefig(name)
-
-
-@task
-def tracking_model_save(model, X_train, X_val, y_train, y_val):
-    # mlflow.set_tracking_uri('http://127.0.0.1:5000')
-    mlflow.set_experiment("penguins_log_reg_pipeline")
-
-    model = train_log_reg(X_train, y_train, 0.0001)
-
-    # with open("models/model_log_reg_pipeline.bin", "wb") as f_out:
-    #    pickle.dump((model), f_out)
-
-    # training set
-    y_pred_train = predict(model, X_train)
-    y_pred_proba_train = predict_prob(model, X_train)
-    metrics_train = get_metrics_train(y_train, y_pred_train, y_pred_proba_train)
     # confusion_matric_artifact = get_confusion_matrix(
     #     model, X_train, y_train, "confusion_matrix_train.png"
     # )
     # roc_artifact = get_roc(model, X_train, y_train, "roc_train.png")
 
     # validation set
-    y_pred = predict(model, X_val)
-    y_pred_proba = predict_prob(model, X_val)
-    metrics_val = get_metrics_val(y_val, y_pred, y_pred_proba)
+
     # confusion_matric_artifact = get_confusion_matrix(
     #     model, X_val, y_val, "confusion_matrix_val.png"
     # )
@@ -187,11 +169,11 @@ def tracking_model_save(model, X_train, X_val, y_train, y_val):
 
     with mlflow.start_run():
 
-        for metric in metrics_train:
-            mlflow.log_metric(metric, metrics_train[metric])
+        # for metric in metrics_train:
+        #    mlflow.log_metric(metric, "metric")
 
-        for metric in metrics_val:
-            mlflow.log_metric(metric, metrics_val[metric])
+        # for metric in metrics_val:
+        #    mlflow.log_metric(metric, "metric")
 
         # mlflow.log_artifact("confusion_matrix_train.png", "confusion_matrix_train")
         # mlflow.log_artifact("confusion_matrix_val.png", "confusion_matrix_val")
@@ -208,13 +190,12 @@ def tracking_model_save(model, X_train, X_val, y_train, y_val):
 
 @flow
 def main():
-    # mlflow.set_tracking_uri("http://127.0.0.1:5000")
+    mlflow.set_tracking_uri("sqlite:///mlflow.db")
     mlflow.set_experiment("penguins_log_reg_pipe")
     df = pull_data("../data/penguins.csv")
     df_enc = preprocess_data(df)
     X_train, X_val, y_train, y_val = get_train_val_datasets(df_enc)
-    model = train_log_reg(X_train, y_train, 0.0001)
-    tracking_model_save(model, X_train, X_val, y_train, y_val)
+    train_log_reg(X_train, X_val, y_train, y_val, 0.0001)
 
 
 main()
