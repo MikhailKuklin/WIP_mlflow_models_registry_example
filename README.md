@@ -1,9 +1,9 @@
-# WIP: Example of MLflow models and register functionality using Prefect orchestation tool
+# WIP: Example of MLflow functionality using Prefect orchestation tool
 
 ![GitHub Actions](https://github.com/MikhailKuklin/mlflow_models_registry_with_prefect/actions/workflows/main.yml/badge.svg)
 
 ## Part 1. 
-*/notebooks/exp_mlflow_register.ipynb* includes implementation of mlflow registry step by step
+*/notebooks/exp_mlflow_register.ipynb* includes implementation of mlflow registry step by step without Prefect
 
 ## WIP Part 2. 
 */scripts/prefect_flow.py* code includes reogranized code for demonstration of orchestration by Prefect
