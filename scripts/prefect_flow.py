@@ -23,7 +23,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
-from prefect import flow
+from prefect import flow, task
 
 
 def pull_data(path_to_dataset: Path):
@@ -155,6 +155,7 @@ def get_roc(clf, X, y, name):
     plt.savefig(name)
 
 
+@task
 def tracking_model_save(model, X_train, X_val, y_train, y_val):
     # mlflow.set_tracking_uri('http://127.0.0.1:5000')
     mlflow.set_experiment("penguins_log_reg_pipeline")
