@@ -5,7 +5,7 @@
 ## Part 1. 
 */notebooks/exp_mlflow_register.ipynb* includes implementation of mlflow registry step by step without Prefect
 
-## WIP Part 2. 
+## WIP!!! Part 2. 
 */scripts/prefect_flow.py* code includes reogranized code for demonstration of orchestration by Prefect
 
 ## Setups
