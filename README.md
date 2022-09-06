@@ -8,6 +8,9 @@
 ## WIP!!! Part 2. 
 */scripts/prefect_flow.py* code includes reogranized code for demonstration of orchestration by Prefect
 
+## WIP!!! Part 3. 
+*/web-service-flask/* folder codes and files necessary for deployment of the model as a web service
+
 ## Setups
 
 ### Step 1: create conda environment
