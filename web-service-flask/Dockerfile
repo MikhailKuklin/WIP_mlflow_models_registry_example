@@ -9,7 +9,7 @@ COPY [ "../requirements.txt", "./" ]
 
 RUN pip install -r requirements.txt
 
-COPY [ "predict.py", "notebooks/models/model_log_reg.bin", "./" ]
+COPY [ "predict.py", "model_log_reg.bin", "./" ]
 
 EXPOSE 5000
 
