@@ -1,7 +1,7 @@
 FROM python:3.9-slim-buster
 
-#RUN pip install -U pip
-#RUN pip install pipenv 
+RUN pip install -U pip
+RUN pip install pipenv 
 
 ARG WORKDIR=/app
 WORKDIR ${WORKDIR}
