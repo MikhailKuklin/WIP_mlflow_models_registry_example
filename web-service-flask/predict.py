@@ -2,12 +2,12 @@ import pickle
 
 from flask import Flask, request, jsonify
 
-with open("notebooks/models/model_log_reg.bin", "rb") as f_in:
+with open("model_log_reg.bin", "rb") as f_in:
     model = pickle.load(f_in)
 
 # add script for predict
 
-app = Flask("duration-prediction")
+app = Flask("penguins-prediction")
 
 
 @app.route("/predict", methods=["POST"])
