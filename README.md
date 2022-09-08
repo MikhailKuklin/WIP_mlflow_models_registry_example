@@ -11,6 +11,8 @@
 ## WIP!!! Part 3. 
 */web-service-flask/* folder codes and files necessary for deployment of the model as a web service
 
+## !!!NOT STARTED Part 4. Model monitoring
+
 ## Setups
 
 ### Step 1: create conda environment
