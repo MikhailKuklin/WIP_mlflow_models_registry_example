@@ -1,11 +1,17 @@
 import pickle
+import numpy as np
 
 from flask import Flask, request, jsonify
 
 with open("model_log_reg.bin", "rb") as f_in:
     model = pickle.load(f_in)
 
-# add script for predict
+
+def predict(features):
+    features = np.load("features.npy")
+    preds = model.predict(X)
+    return float(preds[0])
+
 
 app = Flask("penguins-prediction")
 
