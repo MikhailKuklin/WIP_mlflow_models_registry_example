@@ -22,10 +22,10 @@ def predict_endpoint():
 
     pred = predict(features)
 
-    result = {"duration": pred}
+    result = {"penguin_sex": pred}
 
     return jsonify(result)
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=6000)
