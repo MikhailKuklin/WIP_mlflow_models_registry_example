@@ -1,8 +1,12 @@
+from pyexpat import features
 import requests
 import numpy as np
+import json
 
 features = np.load("features.npy")
 
-url = 'http://localhost:6000/predict'
-response = requests.post(url, json=features)
+json_str = json.dumps({"features": features.tolist()})
+
+url = "http://localhost:6000/predict"
+response = requests.post(url, json=json_str)
 print(response.json())
