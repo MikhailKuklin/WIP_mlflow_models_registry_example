@@ -7,10 +7,8 @@ with open("model_log_reg.bin", "rb") as f_in:
     model = pickle.load(f_in)
 
 
-def predict():
-    features = np.load("features.npy")
+def predict(features):
     preds = model.predict(features)
-    # return float(preds[0])
     return preds
 
 
@@ -21,7 +19,7 @@ app = Flask("penguins-prediction")
 def predict_endpoint():
     features = request.get_json()
 
-    pred = predict()
+    pred = predict(features)
 
     result = {"penguin_sex": pred}
 
