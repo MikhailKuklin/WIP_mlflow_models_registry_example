@@ -21,7 +21,7 @@ app = Flask("penguins-prediction")
 def predict_endpoint():
     features = request.get_json()
 
-    pred = predict(features)
+    pred = predict()
 
     result = {"penguin_sex": pred}
 
