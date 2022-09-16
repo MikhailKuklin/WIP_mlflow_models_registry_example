@@ -1,9 +1,4 @@
-from pyexpat import features
 import requests
-import numpy as np
-import json
-import predict
-
 
 features = {
     "f1": 2.800e02,
