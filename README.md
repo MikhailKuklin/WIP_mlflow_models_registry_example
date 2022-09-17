@@ -8,8 +8,8 @@
 ## WIP!!! Part 2. 
 */scripts/prefect_flow.py* code includes reogranized code for demonstration of orchestration by Prefect
 
-## WIP!!! Part 3. 
-*/web-service-flask/* folder codes and files necessary for deployment of the model as a web service
+## Part 3. 
+*/web-service-flask/* folder codes and files necessary for deployment of the model as a web service in a Docker :whale:
 
 ## !!!NOT STARTED Part 4. Model monitoring with Evidently package
 
