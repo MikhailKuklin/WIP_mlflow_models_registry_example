@@ -3,10 +3,11 @@ import numpy as np
 
 from flask import Flask, request, jsonify
 
+# open trained model
 with open("model_log_reg.bin", "rb") as f_in:
     model = pickle.load(f_in)
 
-
+# transform features to array formar as required by code
 def prepare_features(features):
     X = np.array(
         [
@@ -33,6 +34,7 @@ def predict(X):
     return preds
 
 
+# transform prediction to human-readable format
 def transform_predict(preds):
     if preds[0] == 1.0:
         return "male"
@@ -42,7 +44,7 @@ def transform_predict(preds):
 
 app = Flask("penguins-prediction")
 
-
+# Flask send data to server (POST)
 @app.route("/predict", methods=["POST"])
 def predict_endpoint():
     features = request.get_json()

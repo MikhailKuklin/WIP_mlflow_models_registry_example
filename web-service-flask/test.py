@@ -1,5 +1,6 @@
 import requests
 
+# define features in json format
 features = {
     "f1": 2.800e02,
     "f2": 0,
