@@ -1,6 +1,6 @@
-# Files for running basic example of deployment of a machine-learning model as a web service 
+# Example of deployment of a machine-learning model as a web service 
 using:
-- Docker
+- Docker :whale:
 - Flask
 
 ## Content
