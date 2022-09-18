@@ -1,11 +1,9 @@
 # Example of deployment of a machine-learning model as a web service 
-using:
-- Docker :whale:
-- Flask
+using Flask and Docker :whale:
 
 ## Content
 
-*predict.py*: script contains necessary functions and command to run using Flask
+*predict.py*: script contains necessary functions and command to run model for getting predictionsusing Flask
 
 *test.py*: script contains feature information based on which prediction is made and result is 
 printed
