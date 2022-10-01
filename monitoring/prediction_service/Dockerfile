@@ -1,22 +1,15 @@
-FROM python:3.9.7-slim-buster
+FROM python:3.8-slim-buster
 
-# install pip to the image
-RUN pip install -U pip
-
-# define workdir 
 WORKDIR /app
 
-# copy and install requirements
-COPY [ "../requirements.txt", "./" ]
+COPY requirements.txt requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-# copy necessary files which will be used
-COPY ["app.py","model_log_reg.bin", "./" ]
+RUN pip3 install evidently
 
-# define port
-EXPOSE 6000
+COPY app.py .
+COPY model_log_reg .
 
-# instuction on what should be run when a contained start
-# from the docker image
-ENTRYPOINT [ "gunicorn", "--bind=0.0.0.0:6000", "predict:app" ]
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=9696"]
+
