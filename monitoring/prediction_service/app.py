@@ -70,7 +70,7 @@ def save_to_db(features, prediction):
 def send_to_evidently_service(features, prediction):
     rec = features.copy()
     rec["prediction"] = prediction
-    request.post(f"{EVIDENTLY_SERVICE_ADDRESS }/ iterate / penguins", json=[features])
+    request.post(f"{EVIDENTLY_SERVICE_ADDRESS }/iterate/penguins", json=[features])
 
 
 if __name__ == "__main__":
