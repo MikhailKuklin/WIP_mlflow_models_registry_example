@@ -12,7 +12,7 @@ COPY [ "../requirements.txt", "./" ]
 RUN pip install -r requirements.txt
 
 # copy necessary files which will be used
-COPY ["model_log_reg.bin", "./" ]
+COPY ["app.py","model_log_reg.bin", "./" ]
 
 # define port
 EXPOSE 6000
