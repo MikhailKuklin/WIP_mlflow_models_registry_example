@@ -1,17 +1,17 @@
 datasets:
-  taxi:
+  penguins:
     column_mapping:
       categorical_features:
-        - 'PULocationID'
-        - 'DOLocationID'
+        - 'species'
+        - 'island'
       numerical_features:
-        - 'trip_distance'
+        - 'bill_length_mm'
     data_format:
       header: true
       separator: ','
     monitors:
       - data_drift
-    reference_file: ./datasets/green_tripdata_2021-01.parquet
+    reference_file: ./datasets/pengiuns.parquet
 service:
   calculation_period_sec: 2
   min_reference_size: 30
