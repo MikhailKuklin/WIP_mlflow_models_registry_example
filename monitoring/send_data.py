@@ -6,7 +6,7 @@ from time import sleep
 import pyarrow.parquet as pq
 import requests
 
-table = pq.read_table("penguins.parquet")
+table = pq.read_table("../data/pengiuns.parquet")
 data = table.to_pylist()
 
 
