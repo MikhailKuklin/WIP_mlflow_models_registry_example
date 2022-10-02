@@ -11,7 +11,7 @@
 ## Part 3. 
 */web-service-flask/* folder codes and files necessary for deployment of the model as a web service in a Docker :whale:
 
-## !!!NOT STARTED Part 4. Model monitoring with Evidently package
+## WIP!!! Part 4. Model monitoring with Evidently package
 
 ## Setups
 
