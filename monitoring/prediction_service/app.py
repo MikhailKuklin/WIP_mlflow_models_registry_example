@@ -48,8 +48,8 @@ def predict_endpoint():
     elif y_pred[0] == 0.0:
         result = {"penguin-sex": "female"}
 
-    save_to_db(features, prediction)
-    send_to_evidently_service(features, prediction)
+    #    save_to_db(features, prediction)
+    #    send_to_evidently_service(features, prediction)
 
     return jsonify(result)
 
