@@ -1,5 +1,8 @@
 import requests
 
+
+url = "http://localhost:6000/predict"
+
 # define features in json format
 features = {
     "f1": 2.800e02,
@@ -15,7 +18,6 @@ features = {
     "f11": 3.725e03,
 }
 
-url = "http://localhost:6000/predict"
 
 response = requests.post(url, json=features)
 print(response.json())
