@@ -1,5 +1,6 @@
 import os
 import pickle
+
 import requests
 import numpy as np
 
@@ -9,9 +10,8 @@ from flask import Flask, request, jsonify
 
 MODEL_FILE = os.getenv("MODEL_FILE", "model_log_reg.bin")
 
+EVIDENTLY_SERVICE_ADDRESS = os.getenv("EVIDENTLY_SERVICE", "http://127.0.0.1:5000")
 MONGODB_ADDRESS = os.getenv("MONGODB_ADDRESS", "mongodb://127.0.0.1:27017")
-
-EVIDENTLY_SERVICE_ADDRESS = os.getenv("EVIDENTLY_SERVICE_", "https:///127.0.0.1:5000")
 
 # open trained model
 with open(MODEL_FILE, "rb") as f_in:
@@ -53,16 +53,16 @@ def predict_endpoint():
     return jsonify(result)
 
 
-def save_to_db(features, prediction):
-    rec = features.copy()
+def save_to_db(record, prediction):
+    rec = record.copy()
     rec["prediction"] = prediction
     collection.insert_one(rec)
 
 
-def send_to_evidently_service(features, prediction):
-    rec = features.copy()
+def send_to_evidently_service(record, prediction):
+    rec = record.copy()
     rec["prediction"] = prediction
-    requests.post(f"{EVIDENTLY_SERVICE_ADDRESS }/iterate/penguins", json=[rec])
+    requests.post(f"{EVIDENTLY_SERVICE_ADDRESS}/iterate/taxi", json=[rec])
 
 
 if __name__ == "__main__":
