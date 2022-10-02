@@ -43,13 +43,10 @@ def predict_endpoint():
     )
     print(X)
     y_pred = model.predict(X)
-    if y_pred[0] == 1.0:
-        result = {"penguin-sex": "male"}
-    elif y_pred[0] == 0.0:
-        result = {"penguin-sex": "female"}
+    result = {"penguin-sex": y_pred[0]}
 
-    #    save_to_db(features, prediction)
-    #    send_to_evidently_service(features, prediction)
+    save_to_db(features, y_pred[0])
+    send_to_evidently_service(features, y_pred[0])
 
     return jsonify(result)
 
